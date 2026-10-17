@@ -4,6 +4,7 @@ import { listCategories } from "@lib/data/categories"
 import { listLocales } from "@lib/data/locales"
 import { getLocale } from "@lib/data/locale-actions"
 import { listRegions } from "@lib/data/regions"
+import { CAMPANA, esCategoriaDeCampana } from "@lib/campana"
 import { WHATSAPP_URL, WHATSAPP_VISIBLE } from "@lib/contacto"
 import { User } from "@medusajs/icons"
 import { StoreRegion } from "@medusajs/types"
@@ -21,14 +22,17 @@ export default async function Nav() {
     listCategories().catch(() => []),
   ])
 
-  const topCategories = categories.filter((c) => !c.parent_category)
+  const topCategories = categories.filter(
+    (c) => !c.parent_category && esCategoriaDeCampana(c.handle)
+  )
 
   return (
     <div className="sticky top-0 inset-x-0 z-50 group">
       <div className="bg-denver-900 text-denver-100 text-xs">
         <div className="content-container flex items-center justify-center small:justify-between h-8">
           <p className="truncate">
-            Precio por volumen desde 12 unidades. Envíos a todo el Perú.
+            Campaña de Navidad: adornos, juguetes y regalos. Envíos a todo el
+            Perú.
           </p>
           <div className="hidden small:flex items-center gap-x-6">
             <a
@@ -105,18 +109,10 @@ export default async function Nav() {
         <ul className="content-container flex items-center gap-x-6 h-11 overflow-x-auto no-scrollbar txt-compact-small-plus text-grey-70 whitespace-nowrap">
           <li>
             <LocalizedClientLink
-              href="/collections/campana-escolar"
-              className="rounded-circle bg-lapiz-400 px-3 py-1 text-denver-900 hover:bg-lapiz-300"
-            >
-              Campaña Escolar
-            </LocalizedClientLink>
-          </li>
-          <li>
-            <LocalizedClientLink
-              href="/collections/navidad"
+              href={`/collections/${CAMPANA.coleccion}`}
               className="rounded-circle bg-navidad-500 px-3 py-1 text-white hover:bg-navidad-600"
             >
-              Navidad
+              Todo {CAMPANA.titulo}
             </LocalizedClientLink>
           </li>
           {topCategories.map((c) => (

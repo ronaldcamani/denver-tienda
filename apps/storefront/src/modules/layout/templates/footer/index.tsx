@@ -1,5 +1,6 @@
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
+import { CAMPANA, esCategoriaDeCampana } from "@lib/campana"
 import { WHATSAPP_NUMEROS, WHATSAPP_URL } from "@lib/contacto"
 import { Text } from "@modules/common/components/ui"
 
@@ -43,12 +44,12 @@ export default async function Footer() {
   ])
 
   const categorias = productCategories
-    .filter((c) => !c.parent_category)
+    .filter((c) => !c.parent_category && esCategoriaDeCampana(c.handle))
     .slice(0, 8)
     .map((c) => ({ label: c.name, href: `/categories/${c.handle}` }))
 
   const campanas = (collections ?? [])
-    .slice(0, 6)
+    .filter((c) => c.handle === CAMPANA.coleccion)
     .map((c) => ({ label: c.title, href: `/collections/${c.handle}` }))
 
   return (

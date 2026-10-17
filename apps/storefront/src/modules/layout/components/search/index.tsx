@@ -127,7 +127,7 @@ const Search = ({ variant = "icon" }: { variant?: "icon" | "bar" }) => {
           data-testid="nav-search-button"
         >
           <span className="flex-1 truncate txt-compact-medium">
-            Busca cuadernos, mochilas, colores...
+            Busca árboles, adornos, juguetes...
           </span>
           <span className="flex items-center justify-center rounded-circle bg-lapiz-400 text-denver-900 w-8 h-8 -mr-3">
             <MagnifyingGlass />

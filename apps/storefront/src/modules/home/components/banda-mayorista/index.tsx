@@ -18,8 +18,8 @@ const BandaMayorista = () => {
             ¿Tienes una librería, bodega o colegio?
           </h2>
           <p className="text-denver-100 max-w-md">
-            Accede a precios especiales por mayor en todo el catálogo y compra
-            con factura.
+            Cotiza regalos y adornos por volumen para tu negocio, empresa o
+            colegio, y compra con factura.
           </p>
           <LocalizedClientLink
             href="/account"

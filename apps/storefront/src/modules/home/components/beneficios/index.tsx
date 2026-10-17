@@ -3,8 +3,8 @@ import { DocumentText, ReceiptPercent, TruckFast, Users } from "@medusajs/icons"
 const BENEFICIOS = [
   {
     icono: ReceiptPercent,
-    titulo: "Precio por volumen",
-    texto: "Baja solo desde 12 y 48 unidades",
+    titulo: "Por mayor y menor",
+    texto: "Cotiza volúmenes por WhatsApp",
   },
   {
     icono: TruckFast,

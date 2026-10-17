@@ -2,14 +2,21 @@ import {
   AcademicCap,
   Calendar,
   DocumentText,
+  Gift,
+  Puzzle,
+  Sparkles,
   Palette,
   ShoppingBag,
   Tag,
 } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
+import { esCategoriaDeCampana } from "@lib/campana"
 
 const ICONOS: Record<string, typeof Tag> = {
+  Navidad: Sparkles,
+  Juguetes: Puzzle,
+  Regalos: Gift,
   Escolar: AcademicCap,
   Oficina: Calendar,
   Papelería: DocumentText,
@@ -29,7 +36,9 @@ const Categorias = ({
 }: {
   categories: HttpTypes.StoreProductCategory[]
 }) => {
-  const principales = categories.filter((c) => !c.parent_category)
+  const principales = categories.filter(
+    (c) => !c.parent_category && esCategoriaDeCampana(c.handle)
+  )
 
   if (!principales.length) {
     return null
@@ -40,7 +49,7 @@ const Categorias = ({
       <h2 className="text-xl font-bold text-denver-900 mb-4">
         Compra por categoría
       </h2>
-      <ul className="grid grid-cols-2 xsmall:grid-cols-3 small:grid-cols-5 gap-3">
+      <ul className="grid grid-cols-2 xsmall:grid-cols-3 gap-3">
         {principales.map((c, i) => {
           const Icono = ICONOS[c.name] ?? Tag
           return (
