@@ -17,17 +17,26 @@ La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
 
 ## Desarrollo local
 
-Requisitos: Node 22, PostgreSQL 15 o más y Redis.
+Requisitos: Node 22 (Medusa no soporta aún versiones más nuevas), npm y Docker.
 
 ```bash
+docker compose up -d                                     # PostgreSQL en 5432 y Redis en 6379
 npm install
-cp apps/backend/.env.template apps/backend/.env          # completar DATABASE_URL
-cd apps/backend && npx medusa db:migrate                 # crea tablas y carga los datos de prueba
+cp apps/backend/.env.template apps/backend/.env          # ya apunta a la base de Docker
+cd apps/backend
+npx medusa db:migrate                                    # crea tablas y carga los datos de prueba
 npx medusa user -e admin@ejemplo.pe -p <clave>           # usuario del panel
 cd ../..
-cp apps/storefront/.env.template apps/storefront/.env.local  # pegar la publishable key
+cp apps/storefront/.env.template apps/storefront/.env.local
+```
+
+Pega en `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` de `apps/storefront/.env.local` la clave que aparece en el panel (Settings > Publishable API Keys, "Storefront DENVER"). Luego:
+
+```bash
 npm run dev
 ```
 
 - Backend y panel: http://localhost:9000/app
 - Tienda: http://localhost:8000/pe
+
+Si `db:migrate` dice `ECONNREFUSED 127.0.0.1:5432`, PostgreSQL no está corriendo: revisa `docker compose ps`.
