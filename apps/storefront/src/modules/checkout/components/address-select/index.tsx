@@ -29,7 +29,9 @@ const AddressSelect = ({
   }
 
   const selectedAddress = useMemo(() => {
-    return addresses.find((a) => addressInput && compareAddresses(a, addressInput))
+    return addresses.find(
+      (a) => addressInput && compareAddresses(a, addressInput)
+    )
   }, [addresses, addressInput])
 
   return (
@@ -44,7 +46,7 @@ const AddressSelect = ({
               <span className="block truncate">
                 {selectedAddress
                   ? selectedAddress.address_1
-                  : "Choose an address"}
+                  : "Elige una dirección"}
               </span>
               <ChevronUpDown
                 className={clx("transition-rotate duration-200", {

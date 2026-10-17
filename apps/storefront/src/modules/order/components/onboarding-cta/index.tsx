@@ -18,7 +18,7 @@ const OnboardingCta = ({ orderId }: { orderId: string }) => {
           size="large"
           onClick={() => resetOnboardingState(orderId)}
         >
-          Complete setup in admin
+          Completa la configuración en el panel
         </Button>
       </div>
     </Container>

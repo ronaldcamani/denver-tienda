@@ -108,7 +108,7 @@ export async function signup(
     // record. Any other error is surfaced.
     if (
       fetchError.statusText !== "Unauthorized" ||
-      fetchError.message !== "Identity with email already exists"
+      fetchError.message !== "Ya existe una cuenta con ese correo"
     ) {
       return { state: "error", error: String(error) }
     }

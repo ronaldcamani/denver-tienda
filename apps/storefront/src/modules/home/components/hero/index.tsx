@@ -1,5 +1,5 @@
-import { Github } from "@medusajs/icons";
-import { Button, Heading } from "@modules/common/components/ui";
+import { Github } from "@medusajs/icons"
+import { Button, Heading } from "@modules/common/components/ui"
 const Hero = () => {
   return (
     <div className="h-[75vh] w-full border-b border-ui-border-base relative bg-ui-bg-subtle">
@@ -9,23 +9,23 @@ const Hero = () => {
             level="h1"
             className="text-3xl leading-10 text-ui-fg-base font-normal"
           >
-            Ecommerce Starter Template
+            Útiles escolares y de oficina por mayor y menor
           </Heading>
           <Heading
             level="h2"
             className="text-3xl leading-10 text-ui-fg-subtle font-normal"
           >
-            Powered by Medusa and Next.js
+            Hecho con Medusa y Next.js
           </Heading>
         </span>
         <a href="https://github.com/medusajs/dtc-starter" target="_blank">
           <Button variant="secondary">
-            View on GitHub <Github />
+            Ver en GitHub <Github />
           </Button>
         </a>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero

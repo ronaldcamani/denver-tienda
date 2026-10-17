@@ -1,6 +1,7 @@
 import React, { Suspense } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
+import PriceTiers from "@modules/products/components/price-tiers"
 import ProductActions from "@modules/products/components/product-actions"
 import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
@@ -54,6 +55,9 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
             }
           >
             <ProductActionsWrapper id={product.id} region={region} />
+          </Suspense>
+          <Suspense fallback={null}>
+            <PriceTiers product={product} region={region} />
           </Suspense>
         </div>
       </div>
