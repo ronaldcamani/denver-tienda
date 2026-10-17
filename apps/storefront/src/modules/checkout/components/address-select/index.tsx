@@ -21,7 +21,7 @@ const AddressSelect = ({
   addressInput,
   onSelect,
 }: AddressSelectProps) => {
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: string | null) => {
     const savedAddress = addresses.find((a) => a.id === id)
     if (savedAddress) {
       onSelect(savedAddress as HttpTypes.StoreCartAddress)
@@ -35,7 +35,11 @@ const AddressSelect = ({
   }, [addresses, addressInput])
 
   return (
-    <Listbox onChange={handleSelect} value={selectedAddress?.id}>
+    // null en vez de undefined mantiene el Listbox controlado desde el inicio.
+    <Listbox<typeof Fragment, string | null>
+      onChange={handleSelect}
+      value={selectedAddress?.id ?? null}
+    >
       <div className="relative">
         <Listbox.Button
           className="relative w-full flex justify-between items-center px-4 py-[10px] text-left bg-white cursor-default focus:outline-none border rounded-rounded focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-gray-300 focus-visible:ring-offset-2 focus-visible:border-gray-300 text-base-regular"

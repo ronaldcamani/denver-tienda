@@ -13,9 +13,9 @@ import { Locale } from "@lib/data/locales"
 
 const SideMenuItems = {
   Inicio: "/",
-  "Todos los productos": "/store",
-  "Campaña Escolar": "/collections/campana-escolar",
-  Navidad: "/collections/navidad",
+  "Todo Navidad": "/collections/navidad",
+  Juguetes: "/categories/juguetes",
+  Regalos: "/categories/regalos",
   "Mi cuenta": "/account",
   Carrito: "/cart",
 }

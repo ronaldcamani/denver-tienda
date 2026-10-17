@@ -4,6 +4,7 @@ import { addToCart } from "@lib/data/cart"
 import { useIntersection } from "@lib/hooks/use-in-view"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@modules/common/components/ui"
+import Cantidad from "@modules/common/components/cantidad"
 import Divider from "@modules/common/components/divider"
 import OptionSelect from "@modules/products/components/product-actions/option-select"
 import { isEqual } from "lodash"
@@ -38,6 +39,7 @@ export default function ProductActions({
 
   const [options, setOptions] = useState<Record<string, string | undefined>>({})
   const [isAdding, setIsAdding] = useState(false)
+  const [cantidad, setCantidad] = useState(1)
   const countryCode = useParams().countryCode as string
 
   // If there is only 1 variant, preselect the options
@@ -128,7 +130,7 @@ export default function ProductActions({
 
     await addToCart({
       variantId: selectedVariant.id,
-      quantity: 1,
+      quantity: cantidad,
       countryCode,
     })
 
@@ -161,6 +163,24 @@ export default function ProductActions({
         </div>
 
         <ProductPrice product={product} variant={selectedVariant} />
+
+        <div className="flex items-center gap-x-3">
+          <span className="txt-compact-small text-ui-fg-subtle">Cantidad</span>
+          <Cantidad
+            value={cantidad}
+            onChange={setCantidad}
+            max={
+              selectedVariant?.manage_inventory &&
+              !selectedVariant?.allow_backorder &&
+              typeof selectedVariant?.inventory_quantity === "number" &&
+              selectedVariant.inventory_quantity > 0
+                ? selectedVariant.inventory_quantity
+                : undefined
+            }
+            disabled={!!disabled || isAdding}
+            data-testid="product-quantity"
+          />
+        </div>
 
         <Button
           onClick={handleAddToCart}

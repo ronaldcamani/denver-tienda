@@ -11,8 +11,9 @@ import { listCollections } from "@lib/data/collections"
 import { getRegion } from "@lib/data/regions"
 
 export const metadata: Metadata = {
-  title: "DENVER | Útiles escolares y de oficina",
-  description: "Útiles escolares y de oficina al por mayor y menor.",
+  title: "DENVER | Navidad 2026: adornos, juguetes y regalos",
+  description:
+    "Árboles, adornos de Navidad, juguetes y regalos al por mayor y menor, con envío a todo el Perú.",
 }
 
 export default async function Home(props: {
@@ -39,7 +40,11 @@ export default async function Home(props: {
       <Beneficios />
       <Categorias categories={categories} />
       <ul className="flex flex-col">
-        <FeaturedProducts collections={collections} region={region} />
+        <FeaturedProducts
+          collections={collections}
+          categories={categories}
+          region={region}
+        />
       </ul>
       <Servicios />
       <BandaMayorista />

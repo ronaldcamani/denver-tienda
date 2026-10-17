@@ -40,3 +40,20 @@ npm run dev
 - Tienda: http://localhost:8000/pe
 
 Si `db:migrate` dice `ECONNREFUSED 127.0.0.1:5432`, PostgreSQL no está corriendo: revisa `docker compose ps`.
+
+## Cargar el catálogo real
+
+El catálogo sale del reporte de productos del sistema de ventas en Excel (columnas NOMBRE, PRECIO, PRECIO SIN IGV, UN. MEDIDA, STOCK, CAT. PRODUCTO). Desde `apps/backend`:
+
+```bash
+npx medusa exec ./src/scripts/importar-catalogo.ts ruta/al/reporte.xlsx simular      # solo muestra el resumen
+npx medusa exec ./src/scripts/importar-catalogo.ts ruta/al/reporte.xlsx quitar-demo   # carga todo y borra los 8 productos de prueba
+```
+
+- La categoría se asigna por palabras del nombre, según `src/scripts/catalogo/categorias.ts`. Lo que no coincide queda en "Otros".
+- Solo se publican las categorías de la campaña activa (`CATEGORIAS_CAMPANA`, hoy Navidad, Regalos y Juguetes). El resto queda en borrador y no se ve en la tienda.
+- Si el Excel trae el stock vacío o negativo, el producto se vende sin control de stock hasta que se cuente.
+- Se puede volver a correr con un Excel nuevo: crea los productos nuevos y actualiza la categoría y la publicación de los que ya existen. No cambia precios ni stock de los existentes.
+- Para cambiar de campaña, edita `CATEGORIAS_CAMPANA` en el backend y `CAMPANA` en `apps/storefront/src/lib/campana.ts`, y vuelve a correr el script.
+
+Después de actualizar el código, corre siempre `npx medusa db:migrate`: también actualiza el índice del buscador.
