@@ -2,7 +2,7 @@
 
 import { Popover, PopoverPanel, Transition } from "@headlessui/react"
 import useToggleState from "@lib/hooks/use-toggle-state"
-import { ArrowRightMini, XMark } from "@medusajs/icons"
+import { ArrowRightMini, BarsThree, XMark } from "@medusajs/icons"
 import { HttpTypes } from "@medusajs/types"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { Text, clx } from "@modules/common/components/ui"
@@ -12,10 +12,12 @@ import LanguageSelect from "../language-select"
 import { Locale } from "@lib/data/locales"
 
 const SideMenuItems = {
-  Home: "/",
-  Store: "/store",
-  Account: "/account",
-  Cart: "/cart",
+  Inicio: "/",
+  "Todos los productos": "/store",
+  "Campaña Escolar": "/collections/campana-escolar",
+  Navidad: "/collections/navidad",
+  "Mi cuenta": "/account",
+  Carrito: "/cart",
 }
 
 type SideMenuProps = {
@@ -37,9 +39,10 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
               <div className="relative flex h-full">
                 <Popover.Button
                   data-testid="nav-menu-button"
-                  className="relative h-full flex items-center transition-all ease-out duration-200 focus:outline-none hover:text-ui-fg-base"
+                  className="relative h-full flex items-center gap-x-2 transition-all ease-out duration-200 focus:outline-none hover:opacity-80"
                 >
-                  Menú
+                  <BarsThree />
+                  <span className="sr-only">Menú</span>
                 </Popover.Button>
               </div>
 
@@ -64,7 +67,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                 <PopoverPanel className="flex flex-col absolute w-full pr-4 sm:pr-0 sm:w-1/3 2xl:w-1/4 sm:min-w-min h-[calc(100vh-1rem)] z-[51] inset-x-0 text-sm text-ui-fg-on-color m-2 backdrop-blur-2xl">
                   <div
                     data-testid="nav-menu-popup"
-                    className="flex flex-col h-full bg-[rgba(3,7,18,0.5)] rounded-rounded justify-between p-6"
+                    className="flex flex-col h-full bg-denver-900/95 rounded-rounded justify-between p-6"
                   >
                     <div className="flex justify-end" id="xmark">
                       <button data-testid="close-menu-button" onClick={close}>
@@ -77,7 +80,7 @@ const SideMenu = ({ regions, locales, currentLocale }: SideMenuProps) => {
                           <li key={name}>
                             <LocalizedClientLink
                               href={href}
-                              className="text-3xl leading-10 hover:text-ui-fg-disabled"
+                              className="text-2xl leading-9 hover:text-lapiz-300"
                               onClick={close}
                               data-testid={`${name.toLowerCase()}-link`}
                             >

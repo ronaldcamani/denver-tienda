@@ -1,153 +1,98 @@
 import { listCategories } from "@lib/data/categories"
 import { listCollections } from "@lib/data/collections"
-import { Text, clx } from "@modules/common/components/ui"
+import { WHATSAPP_NUMEROS, WHATSAPP_URL } from "@lib/contacto"
+import { Text } from "@modules/common/components/ui"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
-import MedusaCTA from "@modules/layout/components/medusa-cta"
+import Logo from "@modules/common/components/logo"
+
+const CUENTA = [
+  { label: "Mi cuenta", href: "/account" },
+  { label: "Mis pedidos", href: "/account/orders" },
+  { label: "Cuenta mayorista", href: "/account" },
+  { label: "Carrito", href: "/cart" },
+]
+
+const Columna = ({
+  titulo,
+  links,
+  testId,
+}: {
+  titulo: string
+  links: { label: string; href: string }[]
+  testId?: string
+}) => (
+  <div className="flex flex-col gap-y-3">
+    <span className="txt-small-plus text-white">{titulo}</span>
+    <ul className="grid grid-cols-1 gap-2 txt-small" data-testid={testId}>
+      {links.map((l) => (
+        <li key={`${l.label}-${l.href}`}>
+          <LocalizedClientLink className="hover:text-white" href={l.href}>
+            {l.label}
+          </LocalizedClientLink>
+        </li>
+      ))}
+    </ul>
+  </div>
+)
 
 export default async function Footer() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-  const productCategories = await listCategories()
+  const [{ collections }, productCategories] = await Promise.all([
+    listCollections({ fields: "id, handle, title" }),
+    listCategories().catch(() => []),
+  ])
+
+  const categorias = productCategories
+    .filter((c) => !c.parent_category)
+    .slice(0, 8)
+    .map((c) => ({ label: c.name, href: `/categories/${c.handle}` }))
+
+  const campanas = (collections ?? [])
+    .slice(0, 6)
+    .map((c) => ({ label: c.title, href: `/collections/${c.handle}` }))
 
   return (
-    <footer className="border-t border-ui-border-base w-full">
+    <footer className="bg-denver-900 text-denver-100 w-full mt-8">
       <div className="content-container flex flex-col w-full">
-        <div className="flex flex-col gap-y-6 xsmall:flex-row items-start justify-between py-40">
-          <div>
-            <LocalizedClientLink
-              href="/"
-              className="txt-compact-xlarge-plus text-ui-fg-subtle hover:text-ui-fg-base uppercase"
-            >
-              DENVER
+        <div className="grid grid-cols-2 small:grid-cols-5 gap-10 py-14">
+          <div className="col-span-2 flex flex-col gap-y-4">
+            <LocalizedClientLink href="/" className="w-fit">
+              <Logo />
             </LocalizedClientLink>
+            <p className="txt-small max-w-xs">
+              Importadora y Multiservicios DENVER. Útiles escolares y de oficina
+              al por mayor y menor, con campañas escolares y de Navidad. Copias,
+              impresiones, plotter y anillados.
+            </p>
+            <a
+              href={WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="w-fit txt-small-plus text-lapiz-300 hover:underline"
+            >
+              WhatsApp {WHATSAPP_NUMEROS.join(" / ")}
+            </a>
           </div>
-          <div className="text-small-regular gap-10 md:gap-x-16 grid grid-cols-2 sm:grid-cols-3">
-            {productCategories && productCategories?.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">
-                  Categorías
-                </span>
-                <ul
-                  className="grid grid-cols-1 gap-2"
-                  data-testid="footer-categories"
-                >
-                  {productCategories?.slice(0, 6).map((c) => {
-                    if (c.parent_category) {
-                      return
-                    }
-
-                    const children =
-                      c.category_children?.map((child) => ({
-                        name: child.name,
-                        handle: child.handle,
-                        id: child.id,
-                      })) || null
-
-                    return (
-                      <li
-                        className="flex flex-col gap-2 text-ui-fg-subtle txt-small"
-                        key={c.id}
-                      >
-                        <LocalizedClientLink
-                          className={clx(
-                            "hover:text-ui-fg-base",
-                            children && "txt-small-plus"
-                          )}
-                          href={`/categories/${c.handle}`}
-                          data-testid="category-link"
-                        >
-                          {c.name}
-                        </LocalizedClientLink>
-                        {children && (
-                          <ul className="grid grid-cols-1 ml-3 gap-2">
-                            {children &&
-                              children.map((child) => (
-                                <li key={child.id}>
-                                  <LocalizedClientLink
-                                    className="hover:text-ui-fg-base"
-                                    href={`/categories/${child.handle}`}
-                                    data-testid="category-link"
-                                  >
-                                    {child.name}
-                                  </LocalizedClientLink>
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )}
-            {collections && collections.length > 0 && (
-              <div className="flex flex-col gap-y-2">
-                <span className="txt-small-plus txt-ui-fg-base">Campañas</span>
-                <ul
-                  className={clx(
-                    "grid grid-cols-1 gap-2 text-ui-fg-subtle txt-small",
-                    {
-                      "grid-cols-2": (collections?.length || 0) > 3,
-                    }
-                  )}
-                >
-                  {collections?.slice(0, 6).map((c) => (
-                    <li key={c.id}>
-                      <LocalizedClientLink
-                        className="hover:text-ui-fg-base"
-                        href={`/collections/${c.handle}`}
-                      >
-                        {c.title}
-                      </LocalizedClientLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <div className="flex flex-col gap-y-2">
-              <span className="txt-small-plus txt-ui-fg-base">Medusa</span>
-              <ul className="grid grid-cols-1 gap-y-2 text-ui-fg-subtle txt-small">
-                <li>
-                  <a
-                    href="https://github.com/medusajs"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    GitHub
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://docs.medusajs.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Documentación
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="https://github.com/medusajs/dtc-starter"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="hover:text-ui-fg-base"
-                  >
-                    Código fuente
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          {categorias.length > 0 && (
+            <Columna
+              titulo="Categorías"
+              links={categorias}
+              testId="footer-categories"
+            />
+          )}
+          {campanas.length > 0 && (
+            <Columna titulo="Campañas" links={campanas} />
+          )}
+          <Columna titulo="Tu cuenta" links={CUENTA} />
         </div>
-        <div className="flex w-full mb-16 justify-between text-ui-fg-muted">
+        <div className="flex flex-col xsmall:flex-row gap-2 w-full py-6 border-t border-white/10 justify-between text-denver-200">
           <Text className="txt-compact-small">
-            © {new Date().getFullYear()} DENVER. Todos los derechos reservados.
+            © {new Date().getFullYear()} Importadora y Multiservicios DENVER.
+            Todos los derechos reservados.
           </Text>
-          <MedusaCTA />
+          <Text className="txt-compact-small">
+            Precios en soles con IGV incluido.
+          </Text>
         </div>
       </div>
     </footer>

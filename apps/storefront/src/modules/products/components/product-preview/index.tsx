@@ -7,7 +7,7 @@ import PreviewPrice from "./price"
 
 export default async function ProductPreview({
   product,
-  isFeatured,
+  isFeatured: _isFeatured,
   region: _region,
 }: {
   product: HttpTypes.StoreProduct
@@ -29,18 +29,24 @@ export default async function ProductPreview({
 
   return (
     <LocalizedClientLink href={`/products/${product.handle}`} className="group">
-      <div data-testid="product-wrapper">
+      <div
+        data-testid="product-wrapper"
+        className="flex flex-col h-full rounded-large bg-white p-3 ring-1 ring-grey-20 transition-shadow group-hover:shadow-md"
+      >
         <Thumbnail
           thumbnail={product.thumbnail}
           images={product.images}
-          size="full"
-          isFeatured={isFeatured}
+          size="square"
+          className="shadow-none group-hover:shadow-none bg-grey-5"
         />
-        <div className="flex txt-compact-medium mt-4 justify-between">
-          <Text className="text-ui-fg-subtle" data-testid="product-title">
+        <div className="flex flex-col flex-1 gap-y-2 mt-3">
+          <Text
+            className="txt-compact-small text-grey-70 line-clamp-2 min-h-[2.5rem]"
+            data-testid="product-title"
+          >
             {product.title}
           </Text>
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-baseline gap-x-2 mt-auto txt-compact-medium-plus">
             {cheapestPrice && <PreviewPrice price={cheapestPrice} />}
           </div>
         </div>

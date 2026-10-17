@@ -20,6 +20,30 @@ module.exports = {
         padding: "padding-top padding-right padding-bottom padding-left",
       },
       colors: {
+        // Marca DENVER, tomada del afiche: azul marino, azul electrico y amarillo.
+        denver: {
+          50: "#EAF2FF",
+          100: "#D5E5FF",
+          200: "#A9CAFF",
+          400: "#3FA9FF",
+          500: "#1F6BFF",
+          600: "#1554E0",
+          700: "#0E3FB0",
+          800: "#0B2A80",
+          900: "#0A1B5C",
+        },
+        lapiz: {
+          100: "#FFF9CC",
+          300: "#FFEE66",
+          400: "#FFE11F",
+          500: "#F5CC00",
+        },
+        navidad: {
+          100: "#FDE3E3",
+          500: "#D92D2D",
+          600: "#B91F24",
+          700: "#8F1519",
+        },
         grey: {
           0: "#FFFFFF",
           5: "#F9FAFB",
