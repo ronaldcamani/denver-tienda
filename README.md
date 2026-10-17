@@ -30,7 +30,19 @@ cd ../..
 cp apps/storefront/.env.template apps/storefront/.env.local
 ```
 
-Pega en `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` de `apps/storefront/.env.local` la clave que aparece en el panel (Settings > Publishable API Keys, "Storefront DENVER"). Luego:
+La tienda necesita la clave pública "Storefront DENVER", que se crea sola con `db:migrate`. Para verla, arranca primero solo el backend:
+
+```bash
+cd apps/backend && npm run dev
+```
+
+Entra a http://localhost:9000/app con el usuario que creaste, abre **Settings** (abajo a la izquierda) y luego **Publishable API Keys**. Copia la clave de "Storefront DENVER" (empieza con `pk_`). También puedes sacarla sin el panel:
+
+```bash
+docker compose exec postgres psql -U medusa denver_medusa -c "select token from api_key where type = 'publishable'"
+```
+
+Pégala en `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` de `apps/storefront/.env.local`, detén el backend con Ctrl+C y, desde la raíz del repo, arranca todo:
 
 ```bash
 npm run dev
