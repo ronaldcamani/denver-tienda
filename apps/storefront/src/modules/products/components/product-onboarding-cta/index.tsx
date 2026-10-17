@@ -20,7 +20,9 @@ async function ProductOnboardingCta() {
           You can now continue setting up your store in the admin.
         </Text>
         <a href="http://localhost:7001/a/orders?onboarding_step=create_order_nextjs">
-          <Button className="w-full">Continue setup in admin</Button>
+          <Button className="w-full">
+            Continuar configuración en el panel
+          </Button>
         </a>
       </div>
     </Container>
