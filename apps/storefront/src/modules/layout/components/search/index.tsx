@@ -113,20 +113,37 @@ const SearchPanel = ({ onNavigate }: { onNavigate: () => void }) => {
   )
 }
 
-const Search = () => {
+const Search = ({ variant = "icon" }: { variant?: "icon" | "bar" }) => {
   const { state: isOpen, open, close } = useToggleState()
 
   return (
     <>
-      <button
-        type="button"
-        onClick={open}
-        aria-label="Buscar productos"
-        className="flex items-center hover:text-ui-fg-base"
-        data-testid="nav-search-button"
-      >
-        <MagnifyingGlass />
-      </button>
+      {variant === "bar" ? (
+        <button
+          type="button"
+          onClick={open}
+          aria-label="Buscar productos"
+          className="flex w-full items-center gap-x-3 rounded-circle bg-white px-5 h-11 text-left text-grey-50 shadow-sm ring-1 ring-black/5 transition-shadow hover:shadow-md"
+          data-testid="nav-search-button"
+        >
+          <span className="flex-1 truncate txt-compact-medium">
+            Busca cuadernos, mochilas, colores...
+          </span>
+          <span className="flex items-center justify-center rounded-circle bg-lapiz-400 text-denver-900 w-8 h-8 -mr-3">
+            <MagnifyingGlass />
+          </span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={open}
+          aria-label="Buscar productos"
+          className="flex items-center hover:opacity-80"
+          data-testid="nav-search-button"
+        >
+          <MagnifyingGlass />
+        </button>
+      )}
 
       <SearchDrawer isOpen={isOpen} close={close}>
         <InstantSearch
