@@ -31,6 +31,8 @@ La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
 - Precios por escala según la cantidad en el carrito: unidad (1 a 11), docena (12 a 47) y caja (48 a más).
 - Grupo de clientes **Mayorista** con su lista de precios. Un cliente pasa a mayorista cuando se le agrega al grupo desde el panel (Clientes > Grupos).
 - Envíos: delivery en la ciudad, envío a provincias por agencia y recojo en tienda.
+- Pagos: Yape o Plin al 942 295 923 y pago al recoger (solo con recojo en tienda). El pedido entra como autorizado y se marca pagado en el panel con **Capture payment** cuando llega el dinero.
+- Comprobante: en el checkout el cliente elige boleta (DNI o carné de extranjería) o factura (RUC y razón social). Sale en el pedido del panel, en el recuadro **Comprobante**, para emitirlo en SUNAT SOL.
 - Catálogo de prueba de 8 productos en `apps/backend/src/migration-scripts/data/catalogo-demo.ts`. Se reemplaza por el catálogo real.
 
 ## Desarrollo local

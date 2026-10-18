@@ -12,5 +12,18 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET,
       cookieSecret: process.env.COOKIE_SECRET,
     }
-  }
+  },
+  modules: [
+    {
+      // Medios de pago que la tienda confirma a mano: pp_manual_yape y
+      // pp_manual_recojo. Izipay se agrega aqui cuando haya cuenta.
+      resolve: '@medusajs/medusa/payment',
+      options: {
+        providers: [
+          { resolve: './src/modules/pago-manual', id: 'yape' },
+          { resolve: './src/modules/pago-manual', id: 'recojo' },
+        ],
+      },
+    },
+  ],
 })
