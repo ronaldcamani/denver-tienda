@@ -7,5 +7,3 @@
 !**/.env.template
 .git
 deploy/respaldos
-apps/woocommerce/*
-!apps/woocommerce/package.json

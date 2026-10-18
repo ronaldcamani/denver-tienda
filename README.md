@@ -11,20 +11,6 @@ La campaña de Navidad 2026 sale con Medusa:
 
 Para publicarla en un VPS con dominio y SSL, sigue [deploy/README.md](./deploy/README.md). La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
 
-## Respaldo: WooCommerce
-
-La versión en WooCommerce queda en `apps/woocommerce` como alternativa. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Se corre desde la raíz del repositorio:
-
-```bash
-npm install
-npm run tienda:start                                     # WordPress en http://localhost:8890
-npm run tienda:csv -- "/ruta/completa/ReporteProductos.xlsx"
-npm run tienda:importar
-npm run tienda:stop                                      # para apagarla
-```
-
-Necesitas Docker abierto. El panel está en http://localhost:8890/wp-admin (usuario `admin`, clave `password`). Más detalles en [apps/woocommerce/README.md](./apps/woocommerce/README.md).
-
 ## Qué trae configurado
 
 - Región Perú en soles (PEN), con precios que ya incluyen el IGV de 18 %.
