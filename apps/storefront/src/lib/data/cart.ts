@@ -15,6 +15,7 @@ import {
 } from "./cookies"
 import { getRegion } from "./regions"
 import { getLocale } from "./locale-actions"
+import { errorComprobante, limpiarDocumento } from "@lib/util/comprobante"
 
 /**
  * Retrieves a cart by its ID. If no ID is provided, it will use the cart ID from the cookies.
@@ -24,7 +25,7 @@ import { getLocale } from "./locale-actions"
 export async function retrieveCart(cartId?: string, fields?: string) {
   const id = cartId || (await getCartId())
   fields ??=
-    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name"
+    "*items, *region, *items.product, *items.variant, *items.thumbnail, *items.metadata, +items.total, *promotions, +shipping_methods.name, +metadata"
 
   if (!id) {
     return null
@@ -344,7 +345,21 @@ export async function setAddresses(currentState: unknown, formData: FormData) {
       throw new Error("No existing cart found when setting addresses")
     }
 
+    const comprobante = {
+      comprobante: formData.get("comprobante"),
+      documento: limpiarDocumento(formData.get("documento")),
+      razon_social:
+        formData.get("comprobante") === "factura"
+          ? String(formData.get("razon_social") ?? "").trim()
+          : "",
+    }
+    const error = errorComprobante(comprobante)
+    if (error) {
+      return error
+    }
+
     const data = {
+      metadata: comprobante,
       shipping_address: {
         first_name: formData.get("shipping_address.first_name"),
         last_name: formData.get("shipping_address.last_name"),
