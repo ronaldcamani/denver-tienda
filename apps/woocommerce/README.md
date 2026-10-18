@@ -9,7 +9,7 @@ Versión WooCommerce de la tienda para la campaña Navidad 2026. La tienda en Me
 | `.wp-env.json` | WordPress local con WooCommerce, plugins y tema |
 | `tema/denver` | Tema hijo de Storefront con el logo, colores del afiche, franja de Navidad y botón de WhatsApp |
 | `scripts/generar-csv.ts` | Convierte el reporte de productos del sistema de ventas en el CSV de WooCommerce |
-| `plugins/denver-configuracion` | Plugin que deja la tienda en soles, IGV 18 % incluido, Yape o Plin, envíos y portada al activarlo |
+| `plugins/denver-configuracion` | Plugin que deja la tienda en soles, IGV 18 % incluido, Yape o Plin, envíos y portada al activarlo. También pide en la compra boleta o factura con DNI o RUC, así que debe quedar activo |
 | `config/configurar.php` | Lo mismo para wp-env, más el idioma español |
 | `config/importar.php` | Importa el CSV (se puede repetir para actualizar precios y stock) |
 | `datos/` | CSV generados (no se suben al repositorio) |
@@ -65,3 +65,7 @@ Si prefieres no usar la terminal para importar, en el panel ve a **Productos > I
 - Página del Libro de Reclamaciones, términos y condiciones, y política de privacidad.
 - Cuenta de Izipay y de facturación electrónica.
 - Revisar en el panel las categorías asignadas por nombre.
+
+## Boletas y facturas
+
+La tienda emite los comprobantes a mano en SUNAT SOL. Cada pedido trae, en "Campos adicionales", el comprobante elegido (boleta o factura), el DNI o RUC y la razón social. La compra no deja continuar con un RUC o DNI mal escrito, ni con factura sin razón social. Estos campos funcionan con la página de finalizar compra de bloques, que es la que WooCommerce crea por defecto.
