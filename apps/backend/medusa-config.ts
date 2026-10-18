@@ -35,6 +35,7 @@ module.exports = defineConfig({
     }
   },
   modules: [
+    { resolve: './src/modules/libro-reclamaciones' },
     {
       resolve: '@medusajs/medusa/notification',
       options: { providers: [correo] },

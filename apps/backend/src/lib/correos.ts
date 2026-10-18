@@ -175,3 +175,83 @@ export function correoTienda(pedido: PedidoCorreo): Correo {
     texto,
   }
 }
+
+export type ReclamoCorreo = {
+  numero: number
+  tipo: "reclamo" | "queja"
+  nombre: string
+  tipo_documento: string
+  documento: string
+  domicilio: string
+  telefono: string
+  email: string
+  apoderado?: string | null
+  bien: "producto" | "servicio"
+  monto?: number | null
+  descripcion_bien: string
+  numero_pedido?: string | null
+  detalle: string
+  pedido_consumidor: string
+  respuesta?: string | null
+  created_at: Date | string
+}
+
+const numeroReclamo = (numero: number) => String(numero).padStart(6, "0")
+
+const fechaLima = (fecha: Date | string) =>
+  new Date(fecha).toLocaleString("es-PE", { timeZone: "America/Lima" })
+
+// Constancia de la hoja del Libro de Reclamaciones, para el consumidor y la
+// tienda. Lleva todos los datos registrados, como pide el reglamento.
+export function correoReclamo(r: ReclamoCorreo): Correo {
+  const tipo = r.tipo === "queja" ? "Queja" : "Reclamo"
+  const filas: [string, string][] = [
+    ["Hoja N.º", numeroReclamo(r.numero)],
+    ["Fecha", fechaLima(r.created_at)],
+    ["Proveedor", `${TIENDA.razonSocial}, RUC 20610817433, Mz. 32 Lote 04, P.J. El Porvenir, Miraflores, Arequipa`],
+    ["Consumidor", r.nombre],
+    ["Documento", `${r.tipo_documento.toUpperCase()} ${r.documento}`],
+    ["Domicilio", r.domicilio],
+    ["Teléfono", r.telefono],
+    ["Correo", r.email],
+    ["Padre, madre o apoderado", r.apoderado ?? ""],
+    ["Bien contratado", r.bien === "producto" ? "Producto" : "Servicio"],
+    ["Monto reclamado", r.monto != null ? soles(r.monto) : ""],
+    ["Descripción", r.descripcion_bien],
+    ["N.º de pedido", r.numero_pedido ?? ""],
+    ["Tipo", tipo],
+    ["Detalle", r.detalle],
+    ["Pedido del consumidor", r.pedido_consumidor],
+  ]
+  const visibles = filas.filter(([, valor]) => valor)
+  const html = plantilla(
+    `${tipo} N.º ${numeroReclamo(r.numero)} registrado`,
+    `<p style="font-size:14px">Recibimos tu ${tipo.toLowerCase()} en nuestro Libro de Reclamaciones. Te responderemos a este correo en un plazo máximo de 15 días hábiles.</p>
+<table style="width:100%;border-collapse:collapse;font-size:14px">${visibles
+      .map(
+        ([etiqueta, valor]) =>
+          `<tr><td style="padding:6px 8px 6px 0;vertical-align:top;color:#555;width:38%">${etiqueta}</td><td style="padding:6px 0">${escapar(valor)}</td></tr>`
+      )
+      .join("")}</table>
+<p style="font-size:12px;color:#666;margin-top:16px">Reclamo: disconformidad relacionada a los productos o servicios. Queja: disconformidad no relacionada a los productos o servicios, o malestar respecto a la atención al público. La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI.</p>`
+  )
+  return {
+    asunto: `${tipo} N.º ${numeroReclamo(r.numero)} - Libro de Reclamaciones DENVER`,
+    html,
+    texto: visibles.map(([etiqueta, valor]) => `${etiqueta}: ${valor}`).join("\n"),
+  }
+}
+
+// Respuesta de la tienda a una hoja del Libro de Reclamaciones.
+export function correoRespuestaReclamo(r: ReclamoCorreo): Correo {
+  const tipo = r.tipo === "queja" ? "queja" : "reclamo"
+  const numero = numeroReclamo(r.numero)
+  return {
+    asunto: `Respuesta a tu ${tipo} N.º ${numero} - DENVER`,
+    html: plantilla(
+      `Respuesta a tu ${tipo} N.º ${numero}`,
+      `<p style="font-size:14px">Hola, ${escapar(r.nombre)}:</p><p style="font-size:14px;white-space:pre-line">${escapar(r.respuesta)}</p>`
+    ),
+    texto: `Respuesta a tu ${tipo} N.º ${numero}\n\n${r.respuesta ?? ""}`,
+  }
+}
