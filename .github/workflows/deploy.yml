@@ -1,0 +1,43 @@
+# Publica en el VPS cada vez que CI pasa en main. Tambien se puede lanzar a mano
+# desde la pestana Actions. Necesita los secretos VPS_HOST, VPS_USER y
+# VPS_SSH_KEY (ver deploy/README.md); sin ellos no hace nada.
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  vps:
+    name: Actualizar el VPS
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Revisar secretos
+        id: secretos
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+        run: |
+          if [ -z "$HOST" ]; then
+            echo "Faltan los secretos del VPS; no se publica." >> "$GITHUB_STEP_SUMMARY"
+            echo "listo=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "listo=si" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publicar
+        if: steps.secretos.outputs.listo == 'si'
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          command_timeout: 30m
+          script: ~/denver-tienda/deploy/actualizar.sh

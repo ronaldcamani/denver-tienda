@@ -1,6 +1,12 @@
 "use client"
 import { RadioGroup } from "@headlessui/react"
-import { isStripeLike, paymentInfoMap } from "@lib/constants"
+import {
+  RECOJO_EN_TIENDA,
+  esPagoAlRecoger,
+  instruccionesPago,
+  isStripeLike,
+  paymentInfoMap,
+} from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import ErrorMessage from "@modules/checkout/components/error-message"
@@ -42,6 +48,16 @@ const Payment = ({
   const pathname = usePathname()
 
   const isOpen = searchParams.get("step") === "payment"
+
+  const recogeEnTienda = !!cart.shipping_methods?.some(
+    (metodo) => metodo.name === RECOJO_EN_TIENDA
+  )
+  const metodosDePago = availablePaymentMethods.filter(
+    (metodo) => recogeEnTienda || !esPagoAlRecoger(metodo.id)
+  )
+  const metodoValido = metodosDePago.some(
+    (metodo) => metodo.id === selectedPaymentMethod
+  )
 
   const setPaymentMethod = async (method: string) => {
     setError(null)
@@ -144,13 +160,13 @@ const Payment = ({
       </div>
       <div>
         <div className={isOpen ? "block" : "hidden"}>
-          {!paidByGiftcard && availablePaymentMethods?.length && (
+          {!paidByGiftcard && metodosDePago.length > 0 && (
             <>
               <RadioGroup
                 value={selectedPaymentMethod}
                 onChange={(value: string) => setPaymentMethod(value)}
               >
-                {availablePaymentMethods.map((paymentMethod) => (
+                {metodosDePago.map((paymentMethod) => (
                   <div key={paymentMethod.id}>
                     {isStripeLike(paymentMethod.id) ? (
                       <StripePaymentContainer
@@ -165,7 +181,14 @@ const Payment = ({
                         paymentInfoMap={paymentInfoMap}
                         paymentProviderId={paymentMethod.id}
                         selectedPaymentOptionId={selectedPaymentMethod}
-                      />
+                      >
+                        {selectedPaymentMethod === paymentMethod.id &&
+                          instruccionesPago[paymentMethod.id] && (
+                            <Text className="txt-medium text-ui-fg-subtle pl-9">
+                              {instruccionesPago[paymentMethod.id]}
+                            </Text>
+                          )}
+                      </PaymentContainer>
                     )}
                   </div>
                 ))}
@@ -199,7 +222,7 @@ const Payment = ({
             isLoading={isLoading}
             disabled={
               (isStripeLike(selectedPaymentMethod) && !paymentComplete) ||
-              (!selectedPaymentMethod && !paidByGiftcard)
+              (!metodoValido && !paidByGiftcard)
             }
             data-testid="submit-payment-button"
           >
@@ -237,7 +260,10 @@ const Payment = ({
                       <CreditCard />
                     )}
                   </Container>
-                  <Text>Aparecerá un paso más</Text>
+                  <Text>
+                    {instruccionesPago[activeSession.provider_id] ??
+                      "Aparecerá un paso más"}
+                  </Text>
                 </div>
               </div>
             </div>
