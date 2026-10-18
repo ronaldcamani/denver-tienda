@@ -7,7 +7,8 @@
     "wp-env": "wp-env",
     "csv": "tsx scripts/generar-csv.ts",
     "configurar": "wp-env run cli wp eval-file wp-content/denver/configurar.php",
-    "importar": "wp-env run cli wp eval-file wp-content/denver/importar.php"
+    "importar": "wp-env run cli wp eval-file wp-content/denver/importar.php",
+    "zips": "cd tema && zip -qr ../datos/denver-tema.zip denver && cd ../plugins && zip -qr ../datos/denver-configuracion.zip denver-configuracion"
   },
   "dependencies": {
     "exceljs": "4.4.0"
