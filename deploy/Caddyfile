@@ -1,0 +1,20 @@
+# Caddy saca y renueva solo los certificados SSL de Let's Encrypt.
+# La tienda queda en https://DOMINIO y el backend con el panel en
+# https://api.DOMINIO/app.
+
+{$DOMINIO} {
+	encode gzip zstd
+	reverse_proxy storefront:8000
+}
+
+www.{$DOMINIO} {
+	redir https://{$DOMINIO}{uri} permanent
+}
+
+api.{$DOMINIO} {
+	encode gzip zstd
+	request_body {
+		max_size 20MB
+	}
+	reverse_proxy backend:9000
+}

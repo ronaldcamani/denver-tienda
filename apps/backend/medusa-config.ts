@@ -23,9 +23,30 @@ const correo = process.env.SMTP_HOST
       options: { channels: ['email'] },
     }
 
+// En el servidor (ver deploy/) Redis guarda eventos y flujos para que no se
+// pierdan al reiniciar. Sin REDIS_URL se usan las versiones en memoria.
+const redisUrl = process.env.REDIS_URL
+const conRedis = redisUrl
+  ? [
+      {
+        resolve: '@medusajs/medusa/event-bus-redis',
+        options: { redisUrl },
+      },
+      {
+        resolve: '@medusajs/medusa/workflow-engine-redis',
+        options: { redis: { redisUrl } },
+      },
+    ]
+  : []
+
+// Las fotos subidas en el panel se guardan en static/ y se sirven desde la
+// direccion publica del backend.
+const backendUrl = process.env.MEDUSA_BACKEND_URL || 'http://localhost:9000'
+
 module.exports = defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
+    redisUrl,
     http: {
       storeCors: process.env.STORE_CORS!,
       adminCors: process.env.ADMIN_CORS!,
@@ -35,6 +56,19 @@ module.exports = defineConfig({
     }
   },
   modules: [
+    ...conRedis,
+    {
+      resolve: '@medusajs/medusa/file',
+      options: {
+        providers: [
+          {
+            resolve: '@medusajs/medusa/file-local',
+            id: 'local',
+            options: { backend_url: `${backendUrl}/static` },
+          },
+        ],
+      },
+    },
     { resolve: './src/modules/libro-reclamaciones' },
     {
       resolve: '@medusajs/medusa/notification',
