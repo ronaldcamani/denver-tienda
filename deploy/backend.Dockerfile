@@ -9,7 +9,6 @@ ENV PATH=/app/node_modules/.bin:$PATH
 COPY package.json package-lock.json ./
 COPY apps/backend/package.json apps/backend/
 COPY apps/storefront/package.json apps/storefront/
-COPY apps/woocommerce/package.json apps/woocommerce/
 RUN npm ci --no-audit --no-fund
 
 COPY apps/backend apps/backend
