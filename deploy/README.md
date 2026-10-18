@@ -140,15 +140,32 @@ docker compose exec -T postgres pg_restore -U medusa -d denver_medusa --clean --
 
 ## 8. Actualizar la tienda
 
-Cuando haya cambios nuevos en GitHub:
+### Automático (recomendado)
+
+Cada vez que se une un cambio a `main` y pasan las revisiones (pestaña **Actions** de GitHub), el VPS se actualiza solo. Para activarlo, una sola vez:
+
+1. En el VPS crea una llave para GitHub y autorízala:
+
+   ```bash
+   ssh-keygen -t ed25519 -f ~/.ssh/github-deploy -N ""
+   cat ~/.ssh/github-deploy.pub >> ~/.ssh/authorized_keys
+   cat ~/.ssh/github-deploy
+   ```
+
+2. En GitHub, en el repositorio, ve a Settings, Secrets and variables, Actions y crea tres secretos:
+   - `VPS_HOST`: la IP del VPS.
+   - `VPS_USER`: `root`.
+   - `VPS_SSH_KEY`: todo el texto que mostró el último comando, desde `-----BEGIN` hasta `-----END ... KEY-----`.
+
+Desde ahí puedes lanzarlo también a mano en Actions, Deploy, **Run workflow**. Si los secretos no existen, el deploy no hace nada.
+
+### A mano
 
 ```bash
-cd ~/denver-tienda/deploy
-git pull
-docker compose up -d --build
+~/denver-tienda/deploy/actualizar.sh
 ```
 
-El backend aplica solo las migraciones nuevas al arrancar.
+Baja lo último de `main`, reconstruye, reinicia y espera a que el backend responda. El backend aplica solo las migraciones nuevas al arrancar.
 
 ## Comandos útiles
 

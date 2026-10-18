@@ -1,0 +1,55 @@
+# Revisa cada PR y cada cambio en main: tipos, lint, pruebas y que las imagenes
+# de produccion se construyan.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Tipos, lint y pruebas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - name: Backend
+        working-directory: apps/backend
+        run: |
+          npx tsc --noEmit
+          npm run lint
+          npm run test:unit
+      - name: Tienda
+        working-directory: apps/storefront
+        run: npx tsc --noEmit
+
+  imagenes:
+    name: Imagenes de produccion
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [backend, storefront]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/${{ matrix.app }}.Dockerfile
+          push: false
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
+          # Valores de prueba: en el servidor salen de deploy/.env.
+          build-args: |
+            NEXT_PUBLIC_MEDUSA_BACKEND_URL=https://api.ejemplo.pe
+            NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY=pk_ci
+            NEXT_PUBLIC_BASE_URL=https://ejemplo.pe
