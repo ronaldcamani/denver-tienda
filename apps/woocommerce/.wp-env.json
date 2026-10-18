@@ -4,7 +4,8 @@
   "plugins": [
     "https://downloads.wordpress.org/plugin/woocommerce.zip",
     "https://downloads.wordpress.org/plugin/tier-pricing-table.zip",
-    "https://downloads.wordpress.org/plugin/neurosystems-libro-reclamaciones-peru.zip"
+    "https://downloads.wordpress.org/plugin/neurosystems-libro-reclamaciones-peru.zip",
+    "./plugins/denver-configuracion"
   ],
   "themes": [
     "https://downloads.wordpress.org/theme/storefront.zip",

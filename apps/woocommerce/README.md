@@ -9,7 +9,8 @@ Versión WooCommerce de la tienda para la campaña Navidad 2026. La tienda en Me
 | `.wp-env.json` | WordPress local con WooCommerce, plugins y tema |
 | `tema/denver` | Tema hijo de Storefront con el logo, colores del afiche, franja de Navidad y botón de WhatsApp |
 | `scripts/generar-csv.ts` | Convierte el reporte de productos del sistema de ventas en el CSV de WooCommerce |
-| `config/configurar.php` | Deja la tienda en soles, IGV 18 % incluido, Yape o Plin, envíos y portada |
+| `plugins/denver-configuracion` | Plugin que deja la tienda en soles, IGV 18 % incluido, Yape o Plin, envíos y portada al activarlo |
+| `config/configurar.php` | Lo mismo para wp-env, más el idioma español |
 | `config/importar.php` | Importa el CSV (se puede repetir para actualizar precios y stock) |
 | `datos/` | CSV generados (no se suben al repositorio) |
 
@@ -40,6 +41,10 @@ Si prefieres no usar la terminal para importar, en el panel ve a **Productos > I
 - Los productos con stock vacío o negativo en el reporte se venden sin control de stock.
 - Los exonerados de IGV entran sin impuesto. Cada producto guarda su unidad de medida y su código de afectación SUNAT (10 gravado, 20 exonerado) para la facturación.
 - `datos/precios-mayoristas.csv` es una plantilla con los productos publicados para llenar los precios por volumen, en formato `cantidad:precio` (por ejemplo `12:2.50,100:2.20`).
+
+## Subirla a un hosting
+
+`npm run zips` crea `datos/denver-tema.zip` y `datos/denver-configuracion.zip`, que se suben desde el panel de WordPress (Apariencia > Temas > Subir tema y Plugins > Subir plugin). El tema necesita Storefront instalado.
 
 ## Plugins
 
