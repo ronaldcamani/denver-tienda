@@ -2,6 +2,24 @@
 
 Tienda virtual mayorista y minorista de Importadora y Multiservicios DENVER: útiles escolares, de oficina y campañas de temporada.
 
+## Tienda activa: WooCommerce
+
+La campaña de Navidad 2026 sale con WooCommerce, en `apps/woocommerce`. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Todo se corre desde la raíz del repositorio:
+
+```bash
+npm install
+npm run tienda:start                                     # WordPress en http://localhost:8890
+npm run tienda:csv -- "/ruta/completa/ReporteProductos.xlsx"
+npm run tienda:importar
+npm run tienda:stop                                      # para apagarla
+```
+
+Necesitas Docker abierto. El panel está en http://localhost:8890/wp-admin (usuario `admin`, clave `password`). Más detalles en [apps/woocommerce/README.md](./apps/woocommerce/README.md).
+
+## Tienda en pausa: Medusa
+
+Lo que sigue es la versión en Medusa, que quedó en pausa. No hace falta para WooCommerce.
+
 - `apps/backend`: Medusa v2 (catálogo, precios, pedidos, panel de administración en `/app`).
 - `apps/storefront`: tienda en Next.js.
 
