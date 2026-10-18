@@ -2,9 +2,18 @@
 
 Tienda virtual mayorista y minorista de Importadora y Multiservicios DENVER: útiles escolares, de oficina y campañas de temporada.
 
-## Tienda activa: WooCommerce
+## Tienda activa: Medusa
 
-La campaña de Navidad 2026 sale con WooCommerce, en `apps/woocommerce`. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Todo se corre desde la raíz del repositorio:
+La campaña de Navidad 2026 sale con Medusa:
+
+- `apps/backend`: Medusa v2 (catálogo, precios, pedidos, panel de administración en `/app`).
+- `apps/storefront`: tienda en Next.js.
+
+Para publicarla en un VPS con dominio y SSL, sigue [deploy/README.md](./deploy/README.md). La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
+
+## Respaldo: WooCommerce
+
+La versión en WooCommerce queda en `apps/woocommerce` como alternativa. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Se corre desde la raíz del repositorio:
 
 ```bash
 npm install
@@ -15,15 +24,6 @@ npm run tienda:stop                                      # para apagarla
 ```
 
 Necesitas Docker abierto. El panel está en http://localhost:8890/wp-admin (usuario `admin`, clave `password`). Más detalles en [apps/woocommerce/README.md](./apps/woocommerce/README.md).
-
-## Tienda en pausa: Medusa
-
-Lo que sigue es la versión en Medusa, que quedó en pausa. No hace falta para WooCommerce.
-
-- `apps/backend`: Medusa v2 (catálogo, precios, pedidos, panel de administración en `/app`).
-- `apps/storefront`: tienda en Next.js.
-
-La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
 
 ## Qué trae configurado
 
