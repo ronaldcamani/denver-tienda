@@ -1,0 +1,100 @@
+# Tienda DENVER en un VPS: base de datos, Redis, backend Medusa, tienda Next.js
+# y Caddy con SSL. Uso (desde la carpeta deploy/): ver deploy/README.md.
+name: denver
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medusa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD}
+      POSTGRES_DB: denver_medusa
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medusa -d denver_medusa"]
+      interval: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/backend.Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      # La base esta en la misma red interna, sin SSL.
+      DATABASE_URL: postgres://medusa:${POSTGRES_PASSWORD}@postgres:5432/denver_medusa?sslmode=disable
+      REDIS_URL: redis://redis:6379
+      MEDUSA_BACKEND_URL: https://api.${DOMINIO:?falta DOMINIO}
+      STORE_CORS: https://${DOMINIO},https://www.${DOMINIO}
+      ADMIN_CORS: https://api.${DOMINIO}
+      AUTH_CORS: https://api.${DOMINIO},https://${DOMINIO},https://www.${DOMINIO}
+      JWT_SECRET: ${JWT_SECRET:?falta JWT_SECRET}
+      COOKIE_SECRET: ${COOKIE_SECRET:?falta COOKIE_SECRET}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+      CORREO_TIENDA: ${CORREO_TIENDA:-}
+      MEDUSA_DISABLE_TELEMETRY: "true"
+    volumes:
+      # Fotos de productos subidas desde el panel.
+      - fotos:/app/apps/backend/.medusa/server/static
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:9000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""]
+      interval: 10s
+      retries: 30
+      start_period: 60s
+
+  storefront:
+    build:
+      context: ..
+      dockerfile: deploy/storefront.Dockerfile
+      args:
+        NEXT_PUBLIC_MEDUSA_BACKEND_URL: https://api.${DOMINIO}
+        NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY: ${NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY:-}
+        NEXT_PUBLIC_BASE_URL: https://${DOMINIO}
+        NEXT_PUBLIC_DEFAULT_REGION: pe
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    # La tienda llama al backend por su direccion publica; asi esa llamada se
+    # queda dentro del servidor en vez de salir a internet y volver.
+    extra_hosts:
+      - api.${DOMINIO}:host-gateway
+    profiles: [tienda]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMINIO: ${DOMINIO}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  postgres-data:
+  redis-data:
+  fotos:
+  caddy-data:
+  caddy-config:

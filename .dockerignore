@@ -1,0 +1,11 @@
+**/node_modules
+**/.next
+**/.medusa
+**/.turbo
+**/.env
+**/.env.*
+!**/.env.template
+.git
+deploy/respaldos
+apps/woocommerce/*
+!apps/woocommerce/package.json

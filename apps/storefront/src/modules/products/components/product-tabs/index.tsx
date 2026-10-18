@@ -97,7 +97,8 @@ const ShippingInfoTab = () => {
           <div>
             <span className="font-semibold">Cambios sencillos</span>
             <p className="max-w-sm">
-              ¿No es lo que esperabas? Te lo cambiamos por otro producto.
+              ¿Llegó fallado o no es lo que pediste? Tienes 7 días para pedir el
+              cambio.
             </p>
           </div>
         </div>
@@ -106,8 +107,8 @@ const ShippingInfoTab = () => {
           <div>
             <span className="font-semibold">Cambios y devoluciones</span>
             <p className="max-w-sm">
-              Devuelve el producto en su empaque original y te reembolsamos tu
-              dinero según nuestra política de devoluciones.
+              Si corresponde la devolución, te reembolsamos por el mismo medio
+              de pago. Revisa nuestra política de envíos y devoluciones.
             </p>
           </div>
         </div>

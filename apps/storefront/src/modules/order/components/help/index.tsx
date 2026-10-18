@@ -1,4 +1,5 @@
 import { Heading } from "@modules/common/components/ui"
+import { WHATSAPP_URL } from "@lib/contacto"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import React from "react"
 
@@ -9,11 +10,18 @@ const Help = () => {
       <div className="text-base-regular my-2">
         <ul className="gap-y-2 flex flex-col">
           <li>
-            <LocalizedClientLink href="/contact">Contacto</LocalizedClientLink>
+            <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+              Escríbenos por WhatsApp
+            </a>
           </li>
           <li>
-            <LocalizedClientLink href="/contact">
+            <LocalizedClientLink href="/envios-y-devoluciones">
               Cambios y devoluciones
+            </LocalizedClientLink>
+          </li>
+          <li>
+            <LocalizedClientLink href="/libro-de-reclamaciones">
+              Libro de Reclamaciones
             </LocalizedClientLink>
           </li>
         </ul>

@@ -2,9 +2,18 @@
 
 Tienda virtual mayorista y minorista de Importadora y Multiservicios DENVER: útiles escolares, de oficina y campañas de temporada.
 
-## Tienda activa: WooCommerce
+## Tienda activa: Medusa
 
-La campaña de Navidad 2026 sale con WooCommerce, en `apps/woocommerce`. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Todo se corre desde la raíz del repositorio:
+La campaña de Navidad 2026 sale con Medusa:
+
+- `apps/backend`: Medusa v2 (catálogo, precios, pedidos, panel de administración en `/app`).
+- `apps/storefront`: tienda en Next.js.
+
+Para publicarla en un VPS con dominio y SSL, sigue [deploy/README.md](./deploy/README.md). La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
+
+## Respaldo: WooCommerce
+
+La versión en WooCommerce queda en `apps/woocommerce` como alternativa. Es independiente de Medusa: no usa su base de datos, su Docker Compose ni sus puertos. Se corre desde la raíz del repositorio:
 
 ```bash
 npm install
@@ -16,15 +25,6 @@ npm run tienda:stop                                      # para apagarla
 
 Necesitas Docker abierto. El panel está en http://localhost:8890/wp-admin (usuario `admin`, clave `password`). Más detalles en [apps/woocommerce/README.md](./apps/woocommerce/README.md).
 
-## Tienda en pausa: Medusa
-
-Lo que sigue es la versión en Medusa, que quedó en pausa. No hace falta para WooCommerce.
-
-- `apps/backend`: Medusa v2 (catálogo, precios, pedidos, panel de administración en `/app`).
-- `apps/storefront`: tienda en Next.js.
-
-La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
-
 ## Qué trae configurado
 
 - Región Perú en soles (PEN), con precios que ya incluyen el IGV de 18 %.
@@ -32,7 +32,10 @@ La guía original del starter de Medusa está en [MEDUSA.md](./MEDUSA.md).
 - Grupo de clientes **Mayorista** con su lista de precios. Un cliente pasa a mayorista cuando se le agrega al grupo desde el panel (Clientes > Grupos).
 - Envíos: delivery en la ciudad, envío a provincias por agencia y recojo en tienda.
 - Pagos: Yape o Plin al 942 295 923 y pago al recoger (solo con recojo en tienda). El pedido entra como autorizado y se marca pagado en el panel con **Capture payment** cuando llega el dinero.
+- Correos: al hacer un pedido, el cliente recibe la confirmación con las instrucciones de pago y la tienda recibe un aviso. Se configuran con las variables `SMTP_*` y `CORREO_TIENDA` de `apps/backend/.env` (ver `.env.template`); sin ellas, los correos solo salen en el log.
 - Comprobante: en el checkout el cliente elige boleta (DNI o carné de extranjería) o factura (RUC y razón social). Sale en el pedido del panel, en el recuadro **Comprobante**, para emitirlo en SUNAT SOL.
+- Páginas legales: términos y condiciones, política de privacidad y envíos y devoluciones, con los textos en `apps/storefront/src/lib/legal.ts`. Enlazadas en la columna **Ayuda** del pie de página.
+- Libro de Reclamaciones virtual (Ley 29571) en `/libro-de-reclamaciones`. Cada hoja se numera sola y se envía por correo al consumidor y a la tienda. Se responde desde el panel, en **Reclamaciones**, dentro de los 15 días hábiles; la respuesta llega al correo del consumidor. Requiere `npx medusa db:migrate` para crear la tabla.
 - Catálogo de prueba de 8 productos en `apps/backend/src/migration-scripts/data/catalogo-demo.ts`. Se reemplaza por el catálogo real.
 
 ## Desarrollo local
