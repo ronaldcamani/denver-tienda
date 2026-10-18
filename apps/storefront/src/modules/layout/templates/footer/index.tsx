@@ -14,6 +14,13 @@ const CUENTA = [
   { label: "Carrito", href: "/cart" },
 ]
 
+const AYUDA = [
+  { label: "Envíos y devoluciones", href: "/envios-y-devoluciones" },
+  { label: "Términos y condiciones", href: "/terminos" },
+  { label: "Política de privacidad", href: "/privacidad" },
+  { label: "Libro de Reclamaciones", href: "/libro-de-reclamaciones" },
+]
+
 const Columna = ({
   titulo,
   links,
@@ -55,7 +62,7 @@ export default async function Footer() {
   return (
     <footer className="bg-denver-900 text-denver-100 w-full mt-8">
       <div className="content-container flex flex-col w-full">
-        <div className="grid grid-cols-2 small:grid-cols-5 gap-10 py-14">
+        <div className="grid grid-cols-2 small:grid-cols-6 gap-10 py-14">
           <div className="col-span-2 flex flex-col gap-y-4">
             <LocalizedClientLink href="/" className="w-fit">
               <Logo />
@@ -85,6 +92,7 @@ export default async function Footer() {
             <Columna titulo="Campañas" links={campanas} />
           )}
           <Columna titulo="Tu cuenta" links={CUENTA} />
+          <Columna titulo="Ayuda" links={AYUDA} testId="footer-ayuda" />
         </div>
         <div className="flex flex-col xsmall:flex-row gap-2 w-full py-6 border-t border-white/10 justify-between text-denver-200">
           <Text className="txt-compact-small">

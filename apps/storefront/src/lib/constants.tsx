@@ -1,4 +1,4 @@
-import { CreditCard } from "@medusajs/icons"
+import { BuildingStorefront, CreditCard, Phone } from "@medusajs/icons"
 import Bancontact from "@modules/common/icons/bancontact"
 import Ideal from "@modules/common/icons/ideal"
 import PayPal from "@modules/common/icons/paypal"
@@ -33,6 +33,14 @@ export const paymentInfoMap: Record<
     title: "Pago manual",
     icon: <CreditCard />,
   },
+  pp_manual_yape: {
+    title: "Yape o Plin",
+    icon: <Phone />,
+  },
+  pp_manual_recojo: {
+    title: "Pago al recoger en tienda",
+    icon: <BuildingStorefront />,
+  },
   // Add more payment providers here
 }
 
@@ -46,6 +54,24 @@ export const isStripeLike = (providerId?: string) => {
 export const isPaypal = (providerId?: string) => {
   return providerId?.startsWith("pp_paypal")
 }
+// Instrucciones de los pagos que la tienda confirma a mano. Se muestran al
+// elegir el medio y en la pagina del pedido.
+export const NUMERO_YAPE = "942 295 923"
+export const instruccionesPago: Record<string, string> = {
+  pp_manual_yape: `Yapea o plinea el total al ${NUMERO_YAPE} (DENVER) y envíanos la captura por WhatsApp con tu número de pedido. Despachamos cuando confirmamos el pago.`,
+  pp_manual_recojo:
+    "Pagas en efectivo, Yape o tarjeta cuando recoges tu pedido en la tienda. Te escribimos por WhatsApp cuando esté listo.",
+}
+
+// Solo se puede pagar al recoger si el pedido se recoge en tienda.
+export const RECOJO_EN_TIENDA = "Recojo en tienda"
+export const esPagoAlRecoger = (providerId?: string) =>
+  providerId === "pp_manual_recojo"
+
+// Yape o Plin y pago al recoger: el pedido se crea sin pasarela.
+export const esPagoConfirmadoEnTienda = (providerId?: string) =>
+  !!providerId?.startsWith("pp_manual_")
+
 export const isManual = (providerId?: string) => {
   return providerId?.startsWith("pp_system_default")
 }

@@ -1,0 +1,9 @@
+**/node_modules
+**/.next
+**/.medusa
+**/.turbo
+**/.env
+**/.env.*
+!**/.env.template
+.git
+deploy/respaldos

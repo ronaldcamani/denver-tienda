@@ -30,6 +30,7 @@ import {
   PRODUCTOS,
   preciosPorEscala,
 } from "./data/catalogo-demo"
+import { PAGOS_PERU } from "./pagos-yape-recojo"
 
 export default async function initial_data_seed({
   container,
@@ -102,7 +103,7 @@ export default async function initial_data_seed({
           currency_code: "pen",
           countries: ["pe"],
           is_tax_inclusive: true,
-          payment_providers: ["pp_system_default"],
+          payment_providers: PAGOS_PERU,
         },
       ],
     },

@@ -9,7 +9,9 @@ import { Heading, Text } from "@modules/common/components/ui"
 import Spinner from "@modules/common/icons/spinner"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useActionState } from "react"
+import { textoComprobante } from "@lib/util/comprobante"
 import BillingAddress from "../billing_address"
+import Comprobante from "../comprobante"
 import ErrorMessage from "../error-message"
 import ShippingAddress from "../shipping-address"
 import { SubmitButton } from "../submit-button"
@@ -83,6 +85,7 @@ const Addresses = ({
                 <BillingAddress cart={cart} />
               </div>
             )}
+            <Comprobante cart={cart} />
             <SubmitButton className="mt-6" data-testid="submit-address-button">
               Continuar a la entrega
             </SubmitButton>
@@ -93,81 +96,96 @@ const Addresses = ({
         <div>
           <div className="text-small-regular">
             {cart && cart.shipping_address ? (
-              <div className="flex items-start gap-x-8">
-                <div className="flex items-start gap-x-1 w-full">
-                  <div
-                    className="flex flex-col w-1/3"
-                    data-testid="shipping-address-summary"
-                  >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Dirección de envío
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.first_name}{" "}
-                      {cart.shipping_address.last_name}
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.address_1}{" "}
-                      {cart.shipping_address.address_2}
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.postal_code},{" "}
-                      {cart.shipping_address.city}
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.country_code?.toUpperCase()}
-                    </Text>
-                  </div>
-
-                  <div
-                    className="flex flex-col w-1/3 "
-                    data-testid="shipping-contact-summary"
-                  >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Contacto
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.shipping_address.phone}
-                    </Text>
-                    <Text className="txt-medium text-ui-fg-subtle">
-                      {cart.email}
-                    </Text>
-                  </div>
-
-                  <div
-                    className="flex flex-col w-1/3"
-                    data-testid="billing-address-summary"
-                  >
-                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
-                      Dirección de facturación
-                    </Text>
-
-                    {sameAsBilling ? (
-                      <Text className="txt-medium text-ui-fg-subtle">
-                        La dirección de facturación y de entrega son la misma.
+              <>
+                <div className="flex items-start gap-x-8">
+                  <div className="flex items-start gap-x-1 w-full">
+                    <div
+                      className="flex flex-col w-1/3"
+                      data-testid="shipping-address-summary"
+                    >
+                      <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                        Dirección de envío
                       </Text>
-                    ) : (
-                      <>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.shipping_address.first_name}{" "}
+                        {cart.shipping_address.last_name}
+                      </Text>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.shipping_address.address_1}{" "}
+                        {cart.shipping_address.address_2}
+                      </Text>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.shipping_address.postal_code},{" "}
+                        {cart.shipping_address.city}
+                      </Text>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.shipping_address.country_code?.toUpperCase()}
+                      </Text>
+                    </div>
+
+                    <div
+                      className="flex flex-col w-1/3 "
+                      data-testid="shipping-contact-summary"
+                    >
+                      <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                        Contacto
+                      </Text>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.shipping_address.phone}
+                      </Text>
+                      <Text className="txt-medium text-ui-fg-subtle">
+                        {cart.email}
+                      </Text>
+                    </div>
+
+                    <div
+                      className="flex flex-col w-1/3"
+                      data-testid="billing-address-summary"
+                    >
+                      <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                        Dirección de facturación
+                      </Text>
+
+                      {sameAsBilling ? (
                         <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.first_name}{" "}
-                          {cart.billing_address?.last_name}
+                          La dirección de facturación y de entrega son la misma.
                         </Text>
-                        <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.address_1}{" "}
-                          {cart.billing_address?.address_2}
-                        </Text>
-                        <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.postal_code},{" "}
-                          {cart.billing_address?.city}
-                        </Text>
-                        <Text className="txt-medium text-ui-fg-subtle">
-                          {cart.billing_address?.country_code?.toUpperCase()}
-                        </Text>
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <Text className="txt-medium text-ui-fg-subtle">
+                            {cart.billing_address?.first_name}{" "}
+                            {cart.billing_address?.last_name}
+                          </Text>
+                          <Text className="txt-medium text-ui-fg-subtle">
+                            {cart.billing_address?.address_1}{" "}
+                            {cart.billing_address?.address_2}
+                          </Text>
+                          <Text className="txt-medium text-ui-fg-subtle">
+                            {cart.billing_address?.postal_code},{" "}
+                            {cart.billing_address?.city}
+                          </Text>
+                          <Text className="txt-medium text-ui-fg-subtle">
+                            {cart.billing_address?.country_code?.toUpperCase()}
+                          </Text>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+                {textoComprobante(cart.metadata) && (
+                  <div
+                    className="flex flex-col mt-4"
+                    data-testid="comprobante-summary"
+                  >
+                    <Text className="txt-medium-plus text-ui-fg-base mb-1">
+                      Comprobante
+                    </Text>
+                    <Text className="txt-medium text-ui-fg-subtle">
+                      {textoComprobante(cart.metadata)}
+                    </Text>
+                  </div>
+                )}
+              </>
             ) : (
               <div>
                 <Spinner />
