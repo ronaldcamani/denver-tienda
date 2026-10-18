@@ -1,6 +1,6 @@
 # Tienda DENVER en WooCommerce
 
-Versión WooCommerce de la tienda para la campaña Navidad 2026. La tienda en Medusa (`apps/backend` y `apps/storefront`) queda pausada; de ella se reutiliza la limpieza del Excel y las reglas de categorías.
+Versión WooCommerce de la tienda para la campaña Navidad 2026. Es independiente de la tienda en Medusa (`apps/backend` y `apps/storefront`), que queda pausada: tiene su propia copia de la limpieza del Excel y las reglas de categorías en `scripts/catalogo`, y usa los puertos 8890 en vez de 8888, para no chocar con otros WordPress de prueba.
 
 ## Qué hay aquí
 
@@ -9,6 +9,7 @@ Versión WooCommerce de la tienda para la campaña Navidad 2026. La tienda en Me
 | `.wp-env.json` | WordPress local con WooCommerce, plugins y tema |
 | `tema/denver` | Tema hijo de Storefront con el logo, colores del afiche, franja de Navidad y botón de WhatsApp |
 | `scripts/generar-csv.ts` | Convierte el reporte de productos del sistema de ventas en el CSV de WooCommerce |
+| `scripts/catalogo` | Limpieza de nombres y reglas de categorías (copia de las de Medusa) |
 | `plugins/denver-configuracion` | Plugin que deja la tienda en soles, IGV 18 % incluido, Yape o Plin, envíos y portada al activarlo. También pide en la compra boleta o factura con DNI o RUC, así que debe quedar activo |
 | `config/configurar.php` | Lo mismo para wp-env, más el idioma español |
 | `config/importar.php` | Importa el CSV (se puede repetir para actualizar precios y stock) |
@@ -16,22 +17,25 @@ Versión WooCommerce de la tienda para la campaña Navidad 2026. La tienda en Me
 
 ## Levantarla en tu PC
 
-Necesitas Docker Desktop abierto y Node 22.
+Necesitas Docker abierto y Node 22 o más nuevo. Desde la raíz del repositorio:
 
 ```bash
-npm install                      # desde la raíz del repositorio
-cd apps/woocommerce
-npx wp-env start                 # la primera vez descarga WordPress y los plugins
-npm run csv -- "ruta/Reporte - productos 5.xlsx"
-npm run importar
+npm install
+npm run tienda:start             # la primera vez descarga WordPress y los plugins
+npm run tienda:csv -- "/ruta/completa/Reporte - productos 5.xlsx"
+npm run tienda:importar
 ```
 
-- Tienda: http://localhost:8888
-- Panel: http://localhost:8888/wp-admin (usuario `admin`, clave `password`, solo para tu PC)
+Fíjate en el espacio entre `--` y la ruta del Excel.
 
-`wp-env start` corre `npm run configurar` al terminar. Los ajustes se aplican solo la primera vez, así que lo que cambies después en el panel se respeta.
+- Tienda: http://localhost:8890
+- Panel: http://localhost:8890/wp-admin (usuario `admin`, clave `password`, solo para tu PC)
 
-Para apagarla: `npx wp-env stop`. Para borrarla y empezar de cero: `npx wp-env destroy`.
+`tienda:start` corre `npm run configurar` al terminar. Los ajustes se aplican solo la primera vez, así que lo que cambies después en el panel se respeta.
+
+Para apagarla: `npm run tienda:stop`. Para borrarla y empezar de cero, dentro de `apps/woocommerce`: `npx wp-env destroy`.
+
+Si `tienda:start` dice `address already in use`, otro programa usa el puerto 8890. Apágalo, o cambia `port` en `.wp-env.json`. Si `tienda:importar` dice `Environment not initialized`, es que `tienda:start` no terminó bien: revisa su error.
 
 Si prefieres no usar la terminal para importar, en el panel ve a **Productos > Importar** y sube `datos/productos-woocommerce.csv`. Las columnas se reconocen solas.
 

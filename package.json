@@ -13,7 +13,11 @@
     "test": "turbo test",
     "backend:seed": "turbo seed --filter=@dtc/backend",
     "backend:dev": "turbo dev --filter=@dtc/backend",
-    "storefront:dev": "turbo dev --filter=@dtc/storefront"
+    "storefront:dev": "turbo dev --filter=@dtc/storefront",
+    "tienda:start": "npm run wp-env -w @dtc/woocommerce -- start",
+    "tienda:stop": "npm run wp-env -w @dtc/woocommerce -- stop",
+    "tienda:csv": "npm run csv -w @dtc/woocommerce --",
+    "tienda:importar": "npm run importar -w @dtc/woocommerce"
   },
   "pnpm": {
     "overrides": {

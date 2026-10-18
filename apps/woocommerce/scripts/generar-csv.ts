@@ -1,19 +1,19 @@
 // Genera el CSV de productos para el importador de WooCommerce a partir del
-// reporte de productos del sistema de ventas. Reutiliza la limpieza y las
-// reglas de categorias del importador de Medusa para que ambos catalogos
-// salgan iguales.
+// reporte de productos del sistema de ventas. La limpieza y las reglas de
+// categorias (carpeta catalogo) son una copia de las de Medusa, para que esta
+// tienda no dependa de apps/backend.
 //
 // Uso: npm run csv -- "ruta/Reporte - productos 5.xlsx"
 
 import fs from "node:fs"
 import path from "node:path"
 import ExcelJS from "exceljs"
-import { CATEGORIAS_CAMPANA } from "../../backend/src/scripts/catalogo/categorias"
+import { CATEGORIAS_CAMPANA } from "./catalogo/categorias"
 import {
   FilaReporte,
   ProductoLimpio,
   limpiarCatalogo,
-} from "../../backend/src/scripts/catalogo/limpieza"
+} from "./catalogo/limpieza"
 
 const COLUMNAS = {
   nombre: "NOMBRE",
